@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>md-livewrite</title>
+
+  <style type="text/css" media="screen">
+    * {
+      box-sizing: content-box;
+      margin: 0;
+    }
+    html, body {
+      height: 100%;
+    }
+    .wrap {
+      min-height: 100%;
+      display: flex;
+      align-items: stretch;
+    }
+    .wrap > div {
+      width: 50%;
+      padding: 2em 2.5em;
+      font-size: 16px;
+    }
+    .view,
+    .writer {
+      display: flex;
+    }
+    .view {
+      background-color: #fbfdfe;
+      justify-content: flex-end;
+    }
+    .writer {
+      border-left: 1px solid #e9ebec;
+      background-color: white;
+      justify-content: flex-start;
+    }
+    .view__inner,
+    .writer__input {
+      width: 100%;
+      max-width: 48rem;
+    }
+
+    .writer__input {
+      border: none;
+      background-color: transparent;
+      width: 100%;
+      height: 100%;
+      font-family: Hack;
+      font-size: 13px;
+      line-height: 1.35rem;
+    }
+
+
+    .writer__input:focus {
+      outline: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrap">
+    <div class="view">
+      <div class="view__inner"></div>
+    </div>
+    <div class="writer">
+      <textarea class="writer__input"></textarea>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    window.livewrite = (function() {
+      var el_input = document.getElementsByClassName('writer__input')[0];
+      var el_view = document.getElementsByClassName('view__inner')[0];
+
+      el_input.addEventListener('change', cb_change);
+      el_input.addEventListener('keyup', cb_change);
+
+      function cb_change() {
+        var content = el_input.value;
+        if (window.md) {
+          el_view.innerHTML = window.md.makeHtml(content);
+        }
+
+        save(content);
+      }
+
+      function save(content) {
+        localStorage.setItem('save', content);
+      }
+
+      el_input.value = localStorage.getItem('save');
+      el_input.dispatchEvent(new CustomEvent('change'));
+
+      return {
+        update: cb_change,
+      };
+    })();
+  </script>
+
+  <!-- View styles -->
+  <style type="text/css" media="screen">
+    .view__inner {
+      color: #282828;
+      font-family: 'Adobe Garamond Pro';
+      font-size: 1.2em;
+      line-height: 1.4;
+    }
+    .view__inner h1,
+    .view__inner h2,
+    .view__inner h3,
+    .view__inner h4,
+    .view__inner h5 {
+      font-family: 'Proxima Nova';
+      color: #1f1f1f;
+      line-height: 1;
+      font-weight: 600;
+    }
+    .view__inner h1 {
+      margin: 1.5rem 0 2.25rem;
+      font-weight: 600;
+    }
+    .view__inner h2, .view__inner h3 {
+      margin: 3rem 0 1rem;
+    }
+    .view_inner h2:nth-of-type(1) {
+      margin-top: 0;
+    }
+
+    .view__inner p,
+    .view__inner ul,
+    .view__inner ol {
+      margin: 1rem 0;
+    }
+    .view__inner li {
+      margin: 0.25rem 0;
+    }
+
+    .view__inner pre {
+      padding: 1.5rem 1.4rem;
+      background-color: #f4f6f7;
+      border-radius: 3px;
+      border: 1px solid #cdcfd0;
+      font-size: 13px;
+      line-height: 1.4rem;
+    }
+    .view__inner code {
+      font-family: Hack;
+    }
+  </style>
+
+  <script src="https://cdn.rawgit.com/showdownjs/showdown/1.7.6/dist/showdown.min.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript">
+    window.md = new window.showdown.Converter({
+      noHeaderId: true,
+    });
+    window.livewrite.update();
+  </script>
+</body>
+</html>
