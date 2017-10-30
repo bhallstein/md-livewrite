@@ -6,24 +6,23 @@
 
   <style type="text/css">
     * {
-      box-sizing: content-box;
+      box-sizing: border-box;
       margin: 0;
     }
     html, body {
       height: 100%;
     }
     .wrap {
-      min-height: 100%;
+      height: 100%;
       display: flex;
       align-items: stretch;
     }
-    .wrap > div {
-      width: 50%;
-      padding: 2rem 2.5rem;
-    }
     .view,
     .writer {
-      display: flex;
+      width: 50%;
+    }
+    .view, .writer__input {
+      overflow-y: scroll;
     }
     .view {
       background-color: #fbfdfe;
@@ -40,6 +39,7 @@
       width: 100%;
       max-width: 48rem;
       color: rgb(73, 77, 89);
+      padding: 2.5rem;
     }
 
     .writer__input {
