@@ -69,36 +69,6 @@
     </div>
   </div>
 
-  <script type="text/javascript">
-    window.livewrite = (function() {
-      var el_input = document.getElementsByClassName('writer__input')[0];
-      var el_view = document.getElementsByClassName('view__inner')[0];
-
-      el_input.addEventListener('change', cb_change);
-      el_input.addEventListener('keyup', cb_change);
-
-      function cb_change() {
-        var content = el_input.value;
-        if (window.md) {
-          el_view.innerHTML = window.md.makeHtml(content);
-        }
-
-        save(content);
-      }
-
-      function save(content) {
-        localStorage.setItem('save', content);
-      }
-
-      el_input.value = localStorage.getItem('save');
-      el_input.dispatchEvent(new CustomEvent('change'));
-
-      return {
-        update: cb_change,
-      };
-    })();
-  </script>
-
   <!-- View styles -->
   <style type="text/css" media="screen">
     .view__inner {
@@ -130,10 +100,11 @@
     }
 
     .view__inner p,
-    .view__inner ul,
-    .view__inner ol {
+    .view__inner ul:not(ul ul):not(ol ul),
+    .view__inner ol:not(ul ol):not(ol ol) {
       margin: 1rem 0;
     }
+
     .view__inner li {
       margin: 0.25rem 0;
     }
@@ -150,6 +121,36 @@
       font-family: Hack;
     }
   </style>
+
+  <script type="text/javascript">
+    window.livewrite = (function() {
+      let el_input = document.getElementsByClassName('writer__input')[0];
+      let el_view = document.getElementsByClassName('view__inner')[0];
+
+      el_input.addEventListener('change', cb_change);
+      el_input.addEventListener('keyup', cb_change);
+
+      function cb_change() {
+        let content = el_input.value;
+        if (window.md) {
+          el_view.innerHTML = window.md.makeHtml(content);
+        }
+
+        save(content);
+      }
+
+      function save(content) {
+        localStorage.setItem('save', content);
+      }
+
+      el_input.value = localStorage.getItem('save');
+      el_input.dispatchEvent(new CustomEvent('change'));
+
+      return {
+        update: cb_change,
+      };
+    })();
+  </script>
 
   <script src="https://cdn.rawgit.com/showdownjs/showdown/1.7.6/dist/showdown.min.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript">
